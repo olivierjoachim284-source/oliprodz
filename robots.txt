@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://oliprodz.vercel.app/sitemap.xml

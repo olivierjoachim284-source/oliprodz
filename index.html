@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffffff">
+<meta name="description" content="Oli Prod'z: tablo personalize ak foto ou. 9 fòma, livrezon nan 3 jou, peye ak MonCash oswa NatCash. Rue Chavannes Prolongée, Ayiti.">
+<link rel="canonical" href="https://oliprodz.vercel.app/"><link rel="manifest" href="/manifest.json"><link rel="icon" href="/icon-192.png"><link rel="apple-touch-icon" href="/icon-192.png">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Oli Prod'z"><meta property="og:title" content="Oli Prod'z: Tablo personalize"><meta property="og:description" content="Foto ou enprime sou tablo. Livrezon nan 3 jou. Kòmande sou sit la."><meta property="og:url" content="https://oliprodz.vercel.app/"><meta property="og:image" content="https://oliprodz.vercel.app/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://oliprodz.vercel.app/og.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","name":"Oli Prod'z","url":"https://oliprodz.vercel.app/","telephone":"+50932930508","image":"https://oliprodz.vercel.app/og.png","address":{"@type":"PostalAddress","streetAddress":"Rue Chavannes Prolongée","addressCountry":"HT"},"description":"Tablo personalize, livrezon nan 3 jou."}</script>
+<script defer src="/_vercel/insights/script.js"></script>
 <title>Oli Prod'z – Tablo personalize</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Playfair+Display:wght@600;800&display=swap">
 <style>
@@ -129,7 +135,7 @@ const tabs=[["akey","Akèy","🏠"],["ktl","Katalog","🖼️"],["kmd","Kòmande
 function render(){
  const n=tabs.filter(t=>t[0]!=="adm"||tab==="adm"||admin);
  $("tb").innerHTML=n.map(([k,l,i])=>`<button class="${tab===k||(k==="ktl"&&tab==="det")?"on":""}" onclick="go('${k}')"><span>${i}</span>${l}${k==="adm"&&NOTI?`<b class="bdg2">${NOTI}</b>`:""}</button>`).join("");
- $("v").innerHTML=({akey,ktl,det,kmd,swi,afi,adm})[tab]();
+ $("v").innerHTML=({akey,ktl,det,kmd,swi,afi,adm,lgl})[tab]();
  if(tab==="kmd")calc();
 }
 function go(t,top=true){tab=t;if(t==="adm")NOTI=0;render();if(top)window.scrollTo(0,0)}
@@ -155,7 +161,7 @@ function akey(){
  <div class="steps"><div class="card"><h3>Chwazi</h3><small>Sevis la, gwosè a ak kantite a.</small></div><div class="card"><h3>Peye</h3><small>Voye lajan an sou MonCash oswa NatCash.</small></div><div class="card"><h3>Voye foto</h3><small>Nou resevwa kòmand ou sou WhatsApp, ou voye foto ou.</small></div><div class="card"><h3>Resevwa</h3><small>Livrezon nan 3 jou, oswa vin pran l.</small></div></div></div></section>
  <section style="padding-top:0"><div class="w"><div class="aff"><h2>Touche lajan ak <span class="gold">Oli Prod'z</span></h2><p>Pataje lyen pa w. Chak vant tablo ba w ${COMM*100}% komisyon, ou retire l sou MonCash oswa NatCash.</p><button class="btn" onclick="go('afi')">Vin afilye</button></div></div></section>
  ${rvHtml()}
- <footer><div class="w"><b style="color:var(--tx)">Oli Prod'z</b>, l'inspiration en action<br>Rue Chavannes Prolongée<br><a href="https://wa.me/${WA}" target="_blank" rel="noopener">+509 3293 0508</a></div></footer>`}
+ <footer><div class="w"><b style="color:var(--tx)">Oli Prod'z</b>, l'inspiration en action<br>Rue Chavannes Prolongée<br><a href="https://wa.me/${WA}" target="_blank" rel="noopener">+509 3293 0508</a><br><a href="#" onclick="go('lgl');return false">Règleman ak konfidansyalite</a></div></footer>`}
 
 function kmd(){
  const s=sv(),ref=g("ref","");
@@ -243,11 +249,11 @@ function adm(){
  return `<div class="w pg"><h2>Dashboard</h2><p class="sub">Kontwole tout sit la isit: kòmand, afilye, retrè, avi ak rapò. Ou resevwa notifikasyon pou chak nouvo kòmand, afilye ak retrè lè paj la louvri.</p>
  <div class="stats"><div class="card"><b>${K.length}</b><span>Kòmand</span></div><div class="card"><b>${money(rev)}</b><span>Revni konfime</span></div><div class="card"><b>${A.length}</b><span>Afilye</span></div><div class="card"><b>${R.filter(r=>r.status==="An atant").length}</b><span>Retrè an atant</span></div></div>
  <h3 style="margin:20px 0 10px">Rapò chak mwa</h3>${ms.length?`<div class="card">${ms.map(m=>`<div class="row"><span>${m}</span><b>${M[m].n} kòmand · ${money(M[m].t)}</b></div><div style="height:6px;border-radius:3px;background:#d4a62a;width:${Math.round(M[m].t/mx*100)}%;margin-bottom:6px"></div>`).join("")}</div>`:`<p class="sub">Pa gen vant konfime ankò.</p>`}
- <h3 style="margin:20px 0 10px">Kòmand</h3>${K.length?`<div class="tbl"><table><tr><th>ID</th><th>Kliyan</th><th>Tablo</th><th>Total</th><th>Peman</th><th>Afilye</th><th>Estati</th></tr>${K.map((o,i)=>`<tr><td>${esc(o.id)}<br><small>${new Date(o.created_at).toLocaleDateString("fr-HT")}</small></td><td>${esc(o.customer)}<br><small>${esc(o.phone)}</small></td><td>${esc(o.option)} x${esc(o.qty)}<br><small>${esc(o.delivery)} ${esc(o.details)}</small>${o.photo_url?`<br><a href="${esc(o.photo_url)}" target="_blank" rel="noopener">Wè foto a</a>`:""}</td><td>${money(o.total)}</td><td>${esc(o.pay_method)}<br><small>${esc(o.tx||"-")}</small></td><td>${esc(o.aff_code||"-")}</td><td><select onchange="setS(${i},this.value)">${["An atant","Peye","An pwodiksyon","Pare pou livrezon","Fini","Anile"].map(x=>`<option ${x===o.status?"selected":""}>${x}</option>`).join("")}</select></td></tr>`).join("")}</table></div>`:`<p class="sub">Poko gen kòmand.</p>`}
+ <h3 style="margin:20px 0 10px">Kòmand</h3>${K.length?`<div class="tbl"><table><tr><th>ID</th><th>Kliyan</th><th>Tablo</th><th>Total</th><th>Peman</th><th>Afilye</th><th>Estati</th></tr>${K.map((o,i)=>`<tr><td>${esc(o.id)}<br><small>${new Date(o.created_at).toLocaleDateString("fr-HT")}</small></td><td>${esc(o.customer)}<br><small>${esc(o.phone)}</small><br><a href="https://wa.me/${waN(o.phone)}" target="_blank" rel="noopener">WhatsApp</a></td><td>${esc(o.option)} x${esc(o.qty)}<br><small>${esc(o.delivery)} ${esc(o.details)}</small>${o.photo_url?`<br><button class="btn o s" onclick="seePh(${i})">Wè foto a</button>`:""}</td><td>${money(o.total)}</td><td>${esc(o.pay_method)}<br><small>${esc(o.tx||"-")}</small></td><td>${esc(o.aff_code||"-")}</td><td><select onchange="setS(${i},this.value)">${["An atant","Peye","An pwodiksyon","Pare pou livrezon","Fini","Anile"].map(x=>`<option ${x===o.status?"selected":""}>${x}</option>`).join("")}</select></td></tr>`).join("")}</table></div>`:`<p class="sub">Poko gen kòmand.</p>`}
  <h3 style="margin:24px 0 10px">Avi kliyan</h3>${(ADM.revs||[]).length?`<div class="tbl"><table><tr><th>Non</th><th>Nòt</th><th>Kòmantè</th><th></th></tr>${ADM.revs.map((v,i)=>`<tr><td>${esc(v.name)}</td><td>${v.stars}★</td><td>${esc(v.comment)}</td><td>${v.approved?"Pibliye":`<button class="btn s" onclick="rvOk(${i})">Apwouve</button>`} <button class="btn o s" onclick="rvDel(${i})">Efase</button></td></tr>`).join("")}</table></div>`:`<p class="sub">Pa gen avi.</p>`}
  <h3 style="margin:24px 0 10px">Retrè afilye</h3>${R.length?`<div class="tbl"><table><tr><th>ID</th><th>Afilye</th><th>Montan</th><th>Telefòn</th><th>Estati</th></tr>${R.map((r,i)=>{const a=A.find(x=>x.code===r.aff_code)||{};return `<tr><td>${esc(r.id)}</td><td>${esc(r.aff_code)}<br><small>${esc(a.name||"")}</small></td><td>${money(r.amount)}</td><td>${esc(a.phone||"")}</td><td>${r.status==="Peye"?"Peye":`<button class="btn s" onclick="payR(${i})">Make peye</button>`}</td></tr>`}).join("")}</table></div>`:`<p class="sub">Pa gen demann retrè.</p>`}
  <h3 style="margin:24px 0 10px">Afilye yo</h3>${A.length?`<div class="tbl"><table><tr><th>Kòd</th><th>Non</th><th>Telefòn</th><th>Klik</th></tr>${A.map(a=>`<tr><td>${esc(a.code)}</td><td>${esc(a.name)}</td><td>${esc(a.phone)}</td><td>${a.clicks||0}</td></tr>`).join("")}</table></div>`:`<p class="sub">Poko gen afilye.</p>`}
- <p><button class="btn o s" onclick="ADM=null;render()">Aktyalize</button> <button class="btn o s" onclick="admOut()">Soti</button></p></div>`}
+ <p><button class="btn o s" onclick="ADM=null;render()">Aktyalize</button> <button class="btn o s" onclick="csv()">Ekspòte kòmand (CSV)</button> <button class="btn o s" onclick="admOut()">Soti</button></p></div>`}
 function setS(i,v){const o=ADM.orders[i];sb("/rest/v1/orders?id=eq."+encodeURIComponent(o.id),{method:"PATCH",tok:TOK,prefer:"return=minimal",body:{status:v}}).then(()=>{o.status=v;render()}).catch(()=>toast("Chanjman pa sove."))}
 function payR(i){const r=ADM.rets[i];sb("/rest/v1/withdrawals?id=eq."+encodeURIComponent(r.id),{method:"PATCH",tok:TOK,prefer:"return=minimal",body:{status:"Peye"}}).then(()=>{r.status="Peye";render()}).catch(()=>toast("Chanjman pa sove."))}
 
@@ -301,7 +307,7 @@ function det(){const s=SERVICES[0],i=DI,[a,b]=s.opts[i].split("x");
  <div class="card" style="margin-top:14px;align-items:center;text-align:center">${frame(i,220)}<h2 style="margin-top:10px">Tablo ${a}x${b} pous</h2><small>${gname(i)}</small><div class="tot">${money(s.prix[i])}</div></div>
  <div class="card" style="margin-top:14px"><h3>Enfòmasyon</h3><div class="row"><span>Dimansyon</span><b>${a} x ${b} pous</b></div><div class="row"><span>Livrezon</span><b>3 jou</b></div><div class="row"><span>Livrezon a domisil</span><b>Disponib</b></div><div class="row"><span>Peman</span><b>MonCash, NatCash</b></div><p class="sub" style="margin:10px 0 0">Voye foto ou, nou enprime l sou tablo a. Yon foto ki gen bon rezolisyon bay pi bèl rezilta.</p></div>
  <h3 style="margin:18px 0 10px">Lòt fòma</h3><div class="chips">${s.opts.map((o,j)=>j===i?"":`<button class="chip" onclick="DI=${j};go('det')">${o}<small>${money(s.prix[j])}</small></button>`).join("")}</div>
- <p style="margin-top:18px"><button class="btn b" onclick="pick('pvc',${i})">Kòmande fòma sa a</button></p></div>`}
+ <p style="margin-top:18px"><button class="btn b" onclick="pick('pvc',${i})">Kòmande fòma sa a</button></p><p><a class="btn o b" href="https://wa.me/${WA}?text=${encodeURIComponent("Bonjou Oli Prod'z, mwen vle enfòmasyon sou tablo "+s.opts[i])}" target="_blank" rel="noopener">Mande yon kesyon sou WhatsApp</a></p></div>`}
 function notify(m){toast(m[0]+(m.length>1?" (+"+(m.length-1)+")":""));
  try{const c=new (window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),gn=c.createGain();o.connect(gn);gn.connect(c.destination);o.frequency.value=880;gn.gain.value=.08;o.start();o.stop(c.currentTime+.25)}catch(e){}
  try{if(Notification.permission==="granted")new Notification("Oli Prod'z",{body:m.join("\n")})}catch(e){}}
@@ -317,6 +323,20 @@ function startPoll(){if(PT||!TOK)return;PT=setInterval(poll,30000);poll();try{if
 $("spi").src=document.querySelector("header img").src;
 setTimeout(()=>$("splash").classList.add("off"),1500);
 if(TOK)startPoll();
+
+const waN=p=>{let d=String(p||"").replace(/\D/g,"");if(d.length===8)d="509"+d;return d};
+async function seePh(i){const u=ADM.orders[i].photo_url||"",m=u.match(/\/object\/(?:public\/)?photos\/(.+)$/);if(!m){toast("Pa gen foto.");return}
+ try{const r=await sb("/storage/v1/object/sign/photos/"+m[1],{method:"POST",tok:TOK,body:{expiresIn:3600}});window.open(SB_URL+"/storage/v1"+r.signedURL,"_blank","noopener")}catch(e){toast("Pa ka louvri foto a.")}}
+function csv(){const rows=[["ID","Dat","Kliyan","Telefòn","Tablo","Kantite","Total","Peman","Tx","Afilye","Estati"],...ADM.orders.map(o=>[o.id,String(o.created_at).slice(0,10),o.customer,o.phone,o.option,o.qty,o.total,o.pay_method,o.tx,o.aff_code,o.status])];
+ const t=rows.map(r=>r.map(v=>'"'+String(v==null?"":v).replace(/"/g,'""').replace(/^([=+\-@])/,"'$1")+'"').join(",")).join("\n");
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+t],{type:"text/csv"}));a.download="komand-oliprodz.csv";a.click()}
+function lgl(){return `<div class="w pg" style="max-width:720px"><h2>Règleman ak konfidansyalite</h2><p class="sub">Dènye mizajou: oktòb 2026.</p>
+ <div class="card"><h3>Livrezon</h3><p>Tablo a livre nan 3 jou apre nou resevwa peman an ak foto a. Livrezon a domisil disponib, pri a konfime sou WhatsApp. Ou ka vin pran tablo a tou nan Rue Chavannes Prolongée.</p></div>
+ <div class="card" style="margin-top:12px"><h3>Anilasyon ak ranbousman</h3><p>Tablo yo fèt sou kòmand ak foto ou, kidonk yo pa ka anile lè enprime a kòmanse. Si tablo a rive domaje oswa gen yon erè nou fè, kontakte nou sou WhatsApp nan 48 èdtan epi n ap refè l oswa ranbouse w.</p></div>
+ <div class="card" style="margin-top:12px"><h3>Peman</h3><p>Peman fèt ak MonCash oswa NatCash. Lè w peye ak MonCash otomatik, ou antre nimewo ak kòd sekrè ou sou paj ofisyèl MonCash la. Nou pa janm wè kòd sekrè ou ni nou pa kenbe l.</p></div>
+ <div class="card" style="margin-top:12px"><h3>Konfidansyalite</h3><p>Nou kolekte non ou, nimewo telefòn ou, detay kòmand ou ak foto ou voye a, sèlman pou fè kòmand lan epi kontakte w. Nou pa vann ni pataje done ou ak lòt moun. Foto ou yo rete prive, sèlman nou ka wè yo. Pou mande nou efase done ou, voye yon mesaj sou WhatsApp.</p></div>
+ <div class="card" style="margin-top:12px"><h3>Afilye</h3><p>Afilye touche 10% sou chak vant tablo, 12% apre 10 vant ak 15% apre 25 vant. Komisyon an disponib sèlman lè kòmand lan make "Peye". Retrè minimòm se 500 HTG. Kòmand fo, kòmand pou tèt ou, oswa lòt fwod anile komisyon yo ak kont lan.</p></div>
+ <p style="margin-top:18px"><button class="btn o s" onclick="go('akey')">← Akèy</button></p></div>`}
 render();backFromPay();
 </script>
 </body>
