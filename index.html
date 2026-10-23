@@ -146,10 +146,11 @@ function akey(){
  const ref=g("ref","");
  return `<div class="hero"><div class="w">
  <img src="${document.querySelector('header img').src}" alt="Oli Prod'z">
- <h1>Souvni ou yo, <span class="gold">klere pou tout tan</span></h1>
- <p>Tablo personalize ak foto ou. Voye foto ou, nou fè rès la, nou livre l.</p>
+ <h1>${ST.hero_title?esc(ST.hero_title):'Souvni ou yo, <span class="gold">klere pou tout tan</span>'}</h1>
+ <p>${esc(ST.hero_sub||"Tablo personalize ak foto ou. Voye foto ou, nou fè rès la, nou livre l.")}</p>
  <div class="cta"><button class="btn" onclick="pick('pvc',0)">Kòmande kounye a</button><a class="btn o" href="#sevis" onclick="document.getElementById('sevis').scrollIntoView();return false">Gade sevis yo</a></div>
  ${ref?`<div class="note" style="max-width:480px;margin:18px auto 0">Ou vini pa afilye <b>${ref}</b>. Kòd la aplike sou kòmand ou.</div>`:""}
+ ${ST.announce?`<div class="note" style="max-width:520px;margin:18px auto 0">${esc(ST.announce)}</div>`:""}
  <div class="trust"><div><span>⏱️</span>Livre nan 3 jou</div><div><span>🛵</span>Livrezon disponib</div><div><span>📱</span>Peye ak MonCash ak NatCash</div></div>
  </div></div>
  <section id="sevis"><div class="w"><h2>Sevis nou yo</h2><p class="sub">Chwazi fòma tablo ou epi kòmande. Sevis la disponib pou afilye tou.</p>
@@ -248,6 +249,8 @@ function adm(){
  const PD=K.filter(o=>PAID.includes(o.status)),rev=PD.reduce((a,o)=>a+o.total,0),M={};PD.forEach(o=>{const m=String(o.created_at).slice(0,7);(M[m]=M[m]||{n:0,t:0});M[m].n++;M[m].t+=o.total});const ms=Object.keys(M).sort().reverse().slice(0,6),mx=Math.max(1,...ms.map(m=>M[m].t));
  return `<div class="w pg"><h2>Dashboard</h2><p class="sub">Kontwole tout sit la isit: kòmand, afilye, retrè, avi ak rapò. Ou resevwa notifikasyon pou chak nouvo kòmand, afilye ak retrè lè paj la louvri.</p>
  <div class="stats"><div class="card"><b>${K.length}</b><span>Kòmand</span></div><div class="card"><b>${money(rev)}</b><span>Revni konfime</span></div><div class="card"><b>${A.length}</b><span>Afilye</span></div><div class="card"><b>${R.filter(r=>r.status==="An atant").length}</b><span>Retrè an atant</span></div></div>
+ <h3 style="margin:20px 0 10px">Pri tablo yo (HTG)</h3><div class="card"><div class="r2">${SERVICES[0].opts.map((o,i)=>`<div><label for="pr${i}">${o}</label><input id="pr${i}" type="number" min="1" value="${SERVICES[0].prix[i]}"></div>`).join("")}</div><p></p><button class="btn" onclick="savePrices()">Sove pri yo</button></div>
+ <h3 style="margin:20px 0 10px">Tèks sit la</h3><div class="card"><label for="s1">Gwo tit akèy</label><input id="s1" value="${esc(ST.hero_title||"")}" placeholder="Souvni ou yo, klere pou tout tan"><label for="s2">Sou-tit</label><textarea id="s2" rows="2">${esc(ST.hero_sub||"")}</textarea><label for="s3">Anons nan akèy la (kite vid pou retire l)</label><input id="s3" value="${esc(ST.announce||"")}" placeholder="Egzanp: Fèmen dimanch"><p></p><button class="btn" onclick="saveTxt()">Sove tèks yo</button></div>
  <h3 style="margin:20px 0 10px">Rapò chak mwa</h3>${ms.length?`<div class="card">${ms.map(m=>`<div class="row"><span>${m}</span><b>${M[m].n} kòmand · ${money(M[m].t)}</b></div><div style="height:6px;border-radius:3px;background:#d4a62a;width:${Math.round(M[m].t/mx*100)}%;margin-bottom:6px"></div>`).join("")}</div>`:`<p class="sub">Pa gen vant konfime ankò.</p>`}
  <h3 style="margin:20px 0 10px">Kòmand</h3>${K.length?`<div class="tbl"><table><tr><th>ID</th><th>Kliyan</th><th>Tablo</th><th>Total</th><th>Peman</th><th>Afilye</th><th>Estati</th></tr>${K.map((o,i)=>`<tr><td>${esc(o.id)}<br><small>${new Date(o.created_at).toLocaleDateString("fr-HT")}</small></td><td>${esc(o.customer)}<br><small>${esc(o.phone)}</small><br><a href="https://wa.me/${waN(o.phone)}" target="_blank" rel="noopener">WhatsApp</a></td><td>${esc(o.option)} x${esc(o.qty)}<br><small>${esc(o.delivery)} ${esc(o.details)}</small>${o.photo_url?`<br><button class="btn o s" onclick="seePh(${i})">Wè foto a</button>`:""}</td><td>${money(o.total)}</td><td>${esc(o.pay_method)}<br><small>${esc(o.tx||"-")}</small></td><td>${esc(o.aff_code||"-")}</td><td><select onchange="setS(${i},this.value)">${["An atant","Peye","An pwodiksyon","Pare pou livrezon","Fini","Anile"].map(x=>`<option ${x===o.status?"selected":""}>${x}</option>`).join("")}</select></td></tr>`).join("")}</table></div>`:`<p class="sub">Poko gen kòmand.</p>`}
  <h3 style="margin:24px 0 10px">Avi kliyan</h3>${(ADM.revs||[]).length?`<div class="tbl"><table><tr><th>Non</th><th>Nòt</th><th>Kòmantè</th><th></th></tr>${ADM.revs.map((v,i)=>`<tr><td>${esc(v.name)}</td><td>${v.stars}★</td><td>${esc(v.comment)}</td><td>${v.approved?"Pibliye":`<button class="btn s" onclick="rvOk(${i})">Apwouve</button>`} <button class="btn o s" onclick="rvDel(${i})">Efase</button></td></tr>`).join("")}</table></div>`:`<p class="sub">Pa gen avi.</p>`}
@@ -337,6 +340,17 @@ function lgl(){return `<div class="w pg" style="max-width:720px"><h2>Règleman a
  <div class="card" style="margin-top:12px"><h3>Konfidansyalite</h3><p>Nou kolekte non ou, nimewo telefòn ou, detay kòmand ou ak foto ou voye a, sèlman pou fè kòmand lan epi kontakte w. Nou pa vann ni pataje done ou ak lòt moun. Foto ou yo rete prive, sèlman nou ka wè yo. Pou mande nou efase done ou, voye yon mesaj sou WhatsApp.</p></div>
  <div class="card" style="margin-top:12px"><h3>Afilye</h3><p>Afilye touche 10% sou chak vant tablo, 12% apre 10 vant ak 15% apre 25 vant. Komisyon an disponib sèlman lè kòmand lan make "Peye". Retrè minimòm se 500 HTG. Kòmand fo, kòmand pou tèt ou, oswa lòt fwod anile komisyon yo ak kont lan.</p></div>
  <p style="margin-top:18px"><button class="btn o s" onclick="go('akey')">← Akèy</button></p></div>`}
+
+let ST={};
+async function loadCfg(){try{const [p,t]=await Promise.all([sb("/rest/v1/prices?select=option,price&order=sort"),sb("/rest/v1/settings?select=key,value")]);
+ const s0=SERVICES[0];(p||[]).forEach(r=>{const i=s0.opts.indexOf(r.option);if(i>=0&&r.price>0)s0.prix[i]=r.price});(t||[]).forEach(r=>ST[r.key]=r.value);if(tab!=="kmd"&&tab!=="adm")render()}catch(e){}}
+async function savePrices(){try{const s=SERVICES[0],v=s.opts.map((o,i)=>parseInt($("pr"+i).value,10));
+ const bad=v.findIndex(x=>!(x>0));if(bad>=0){toast("Pri "+s.opts[bad]+" pa valab.");return}
+ for(let i=0;i<v.length;i++){await sb("/rest/v1/prices?option=eq."+encodeURIComponent(s.opts[i]),{method:"PATCH",tok:TOK,prefer:"return=minimal",body:{price:v[i]}});s.prix[i]=v[i]}
+ toast("Pri yo sove.")}catch(e){toast("Pri yo pa sove. Konekte ankò.")}}
+async function saveTxt(){try{const rows=[["hero_title","s1"],["hero_sub","s2"],["announce","s3"]].map(([k,id])=>({key:k,value:$(id).value.trim().slice(0,300)}));
+ await sb("/rest/v1/settings?on_conflict=key",{method:"POST",tok:TOK,prefer:"resolution=merge-duplicates,return=minimal",body:rows});rows.forEach(r=>ST[r.key]=r.value);toast("Tèks yo sove.")}catch(e){toast("Tèks yo pa sove. Konekte ankò.")}}
+loadCfg();
 render();backFromPay();
 </script>
 </body>

@@ -1,5 +1,13 @@
 // Fonksyon pataje pou MonCash. Kle yo pa janm nan frontend: yo nan Vercel (Environment Variables).
-export const PRICES = [1750, 2250, 3000, 3500, 4250, 4750, 6500, 7000, 8500]; // HTG, menm lòd ak fòma yo nan app la
+const SB = "https://midjclffirllibagxffh.supabase.co";
+const KEY = "sb_publishable_3uvXUcum8dXzfhpg5Sz56g_ryQhUMXE"; // kle piblik, pa sekrè
+
+// Pri yo soti nan tab "prices" nan Supabase (ou chanje yo nan Dashboard)
+export async function getPrices() {
+  const r = await fetch(`${SB}/rest/v1/prices?select=option,price&order=sort`, { headers: { apikey: KEY } });
+  if (!r.ok) throw new Error("Pa ka li pri yo");
+  return r.json();
+}
 export const host = () =>
   process.env.MONCASH_MODE === "live" ? "moncashbutton.digicelgroup.com" : "sandbox.moncashbutton.digicelgroup.com";
 
