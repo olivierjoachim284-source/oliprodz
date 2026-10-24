@@ -34,7 +34,7 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgb
 .tb{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.98);border-top:1px solid var(--bd);display:flex;z-index:9;padding-bottom:env(safe-area-inset-bottom,0px)}
 .tb button{flex:1;padding:9px 0 8px;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px;border-radius:0}
 .tb button span{font-size:20px;line-height:1}.tb button.on{color:#000}
-.srch{padding-bottom:10px}.srch input{border-radius:99px;padding:11px 18px}
+.srch{padding-bottom:10px}.faq details{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:12px 16px;margin-bottom:8px}.faq summary{cursor:pointer;font-weight:700}.faq p{margin:8px 0 0;color:var(--mu)}.srch input{border-radius:99px;padding:11px 18px}
 .tb button{position:relative}.bdg2{background:#c0392b;color:#fff;border-radius:99px;font-size:11px;font-weight:800;padding:0 6px;position:absolute;top:2px;right:calc(50% - 26px)}
 #splash{position:fixed;inset:0;background:#fff;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;transition:opacity .5s}
 #splash.off{opacity:0;pointer-events:none}
@@ -133,7 +133,7 @@ const $=i=>document.getElementById(i);
 let tab="akey",sel="pvc",oi=0,qty=1,pay="MonCash",admin=false;
 const tabs=[["akey","Akèy","🏠"],["ktl","Katalog","🖼️"],["kmd","Kòmande","🛒"],["afi","Afilye","🤝"],["adm","Dashboard","📊"]];
 function render(){
- const n=tabs.filter(t=>t[0]!=="adm"||tab==="adm"||admin);
+ const n=tabs.filter(t=>t[0]!=="adm"||tab==="adm"||admin||g("owner",false));
  $("tb").innerHTML=n.map(([k,l,i])=>`<button class="${tab===k||(k==="ktl"&&tab==="det")?"on":""}" onclick="go('${k}')"><span>${i}</span>${l}${k==="adm"&&NOTI?`<b class="bdg2">${NOTI}</b>`:""}</button>`).join("");
  $("v").innerHTML=({akey,ktl,det,kmd,swi,afi,adm,lgl})[tab]();
  if(tab==="kmd")calc();
@@ -161,6 +161,14 @@ function akey(){
  <section style="padding-top:0"><div class="w"><h2>Kijan sa mache</h2><p class="sub">Kat etap, san konplikasyon.</p>
  <div class="steps"><div class="card"><h3>Chwazi</h3><small>Sevis la, gwosè a ak kantite a.</small></div><div class="card"><h3>Peye</h3><small>Voye lajan an sou MonCash oswa NatCash.</small></div><div class="card"><h3>Voye foto</h3><small>Nou resevwa kòmand ou sou WhatsApp, ou voye foto ou.</small></div><div class="card"><h3>Resevwa</h3><small>Livrezon nan 3 jou, oswa vin pran l.</small></div></div></div></section>
  <section style="padding-top:0"><div class="w"><div class="aff"><h2>Touche lajan ak <span class="gold">Oli Prod'z</span></h2><p>Pataje lyen pa w. Chak vant tablo ba w ${COMM*100}% komisyon, ou retire l sou MonCash oswa NatCash.</p><button class="btn" onclick="go('afi')">Vin afilye</button></div></div></section>
+<section style="padding-top:0"><div class="w faq"><h2>Kesyon moun poze</h2>
+ <details><summary>Konbyen tan pou m resevwa tablo a?</summary><p>Tablo a livre nan 3 jou apre nou resevwa peman an ak foto a.</p></details>
+ <details><summary>Ki foto mwen ka voye?</summary><p>Nenpòt foto klè. Plis foto a gen bon rezolisyon, plis tablo a bèl. Ou voye l sou sit la oswa sou WhatsApp.</p></details>
+ <details><summary>Kijan mwen peye?</summary><p>Ak MonCash oswa NatCash. Ou antre nimewo tranzaksyon an, epi nou verifye l.</p></details>
+ <details><summary>Èske nou livre?</summary><p>Wi, livrezon a domisil disponib. Nou konfime pri a sou WhatsApp.</p></details>
+ <details><summary>Èske m ka chanje foto a oswa anile?</summary><p>Wi, sèlman anvan enprime a kòmanse. Kontakte nou rapid sou WhatsApp.</p></details>
+ <details><summary>Kijan mwen swiv kòmand mwen?</summary><p>Nan paj Swivi, antre nimewo kòmand ou ak 4 dènye chif telefòn ou te itilize a.</p></details></div></section>
+ <section style="padding-top:0"><div class="w"><div class="card" style="text-align:center;align-items:center"><h2>Kontakte nou</h2><p class="sub" style="margin:0">Rue Chavannes Prolongée</p><div class="cta"><a class="btn" href="https://wa.me/${WA}" target="_blank" rel="noopener">Ekri sou WhatsApp</a><a class="btn o" href="https://www.google.com/maps/search/?api=1&query=Rue+Chavannes+Prolongee+Haiti" target="_blank" rel="noopener">Wè sou kat la</a></div></div></div></section>
  ${rvHtml()}
  <footer><div class="w"><b style="color:var(--tx)">Oli Prod'z</b>, l'inspiration en action<br>Rue Chavannes Prolongée<br><a href="https://wa.me/${WA}" target="_blank" rel="noopener">+509 3293 0508</a><br><a href="#" onclick="go('lgl');return false">Règleman ak konfidansyalite</a></div></footer>`}
 
@@ -208,13 +216,13 @@ function saveOrder(o){
 
 let AFS=null,AFL=false;
 function loadAfs(){const c=g("monkod","");if(!c||AFL)return;AFL=true;
- sb("/rest/v1/rpc/affiliate_stats",{method:"POST",body:{p_code:c}}).then(d=>{AFL=false;if(!d||d.name==null){st("monkod","");AFS=null}else{AFS=d;sb("/rest/v1/rpc/top_affiliates",{method:"POST",body:{}}).then(x=>{TOPA=x||[];if(tab==="afi")render()}).catch(()=>{})}if(tab==="afi")render()}).catch(()=>{AFL=false;toast("Pa ka chaje done afilye yo.")})}
+ sb("/rest/v1/rpc/affiliate_stats",{method:"POST",body:{p_code:c,p_pin:PIN}}).then(d=>{AFL=false;if(!d||d.name==null){st("monkod","");AFS=null}else{AFS=d;sb("/rest/v1/rpc/top_affiliates",{method:"POST",body:{}}).then(x=>{TOPA=x||[];if(tab==="afi")render()}).catch(()=>{})}if(tab==="afi")render()}).catch(()=>{AFL=false;toast("Pa ka chaje done afilye yo.")})}
 function afi(){
  const code=g("monkod","");
  if(!code)return `<div class="w pg"><h2>Vin afilye</h2><p class="sub">Touche 10% jiska 15% sou chak vant tablo.</p>
  <div class="steps" style="margin-bottom:26px"><div class="card"><h3>Enskri</h3><small>Ou jwenn kòd ak lyen pa w.</small></div><div class="card"><h3>Pataje</h3><small>WhatsApp, Facebook, TikTok.</small></div><div class="card"><h3>Touche</h3><small>Retire sou MonCash oswa NatCash.</small></div></div>
- <div class="lay" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))"><div class="card"><h3>Kreye kont</h3><label for="an">Non ou</label><input id="an"><label for="at">Telefòn MonCash / NatCash</label><input id="at" type="tel"><p></p><button class="btn b" onclick="reg()">Kreye kont afilye</button></div>
- <div class="card"><h3>Mwen gen yon kòd</h3><label for="ak">Kòd afilye</label><input id="ak" style="text-transform:uppercase"><p></p><button class="btn o b" onclick="login()">Antre</button></div></div></div>`;
+ <div class="lay" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))"><div class="card"><h3>Kreye kont</h3><label for="an">Non ou</label><input id="an"><label for="at">Telefòn MonCash / NatCash</label><input id="at" type="tel"><label for="ap">PIN sekrè (4 a 6 chif)</label><input id="ap" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password"><p></p><button class="btn b" onclick="reg()">Kreye kont afilye</button></div>
+ <div class="card"><h3>Mwen gen yon kòd</h3><label for="ak">Kòd afilye</label><input id="ak" style="text-transform:uppercase"><label for="al">PIN</label><input id="al" type="password" inputmode="numeric" maxlength="6" autocomplete="current-password"><p></p><button class="btn o b" onclick="login()">Antre</button></div></div></div>`;
  if(!AFS){loadAfs();return `<div class="w pg"><p class="sub">Ap chaje...</p></div>`}
  const K=AFS.orders||[],ok=K.filter(o=>PAID.includes(o.status)),RT=ok.length>=25?0.15:ok.length>=10?0.12:COMM,nx=ok.length>=25?"":ok.length>=10?"Ou bezwen "+(25-ok.length)+" vant ankò pou 15%.":"Ou bezwen "+(10-ok.length)+" vant ankò pou 12%.";
  const gen=ok.reduce((a,o)=>a+o.total*RT,0),pend=K.filter(o=>o.status==="An atant").reduce((a,o)=>a+o.total*RT,0);
@@ -228,17 +236,18 @@ function afi(){
  <div class="card" style="margin-top:14px"><h3>Retrè</h3><small>Minimòm 500 HTG. Komisyon an disponib sèlman apre kòmand lan make "Peye".</small><button class="btn" ${dispo<500?"disabled":""} onclick="askRet(${dispo})">Mande retrè ${money(dispo)}</button></div>
  <h3 style="margin:24px 0 10px">Vant ou yo</h3>${K.length?`<div class="tbl"><table><tr><th>Kòmand</th><th>Sevis</th><th>Komisyon</th><th>Estati</th></tr>${K.map(o=>`<tr><td>${esc(o.id)}</td><td>${esc(o.service)}</td><td>${money(Math.round(o.total*RT))}</td><td>${esc(o.status)}</td></tr>`).join("")}</table></div>`:`<p class="sub">Poko gen vant. Pataje lyen ou pou kòmanse.</p>`}
  <p><button class="btn o s" onclick="st('monkod','');AFS=null;render()">Dekonekte</button> <button class="btn o s" onclick="AFS=null;render()">Aktyalize</button></p></div>`}
-function reg(){const n=$("an").value.trim(),t=$("at").value.trim();if(!n||!t){toast("Ranpli non ak telefòn.");return}
- const c=(n.replace(/[^a-zA-Z]/g,"").slice(0,5).toUpperCase()||"AFI")+Math.floor(100+Math.random()*900);
- sb("/rest/v1/affiliates",{method:"POST",prefer:"return=minimal",body:{code:c,name:n,phone:t}}).then(()=>{st("monkod",c);AFS=null;render();toast("Kont kreye. Kòd ou: "+c)}).catch(()=>toast("Pa ka kreye kont lan. Eseye ankò."))}
-function login(){const c=$("ak").value.trim().toUpperCase().replace(/[^A-Z0-9]/g,"");if(!c)return;
- sb("/rest/v1/rpc/affiliate_stats",{method:"POST",body:{p_code:c}}).then(d=>{if(!d||d.name==null){toast("Kòd sa a pa egziste.");return}st("monkod",c);AFS=d;render()}).catch(()=>toast("Pa ka konekte. Eseye ankò."))}
-function askRet(m){if(m<500)return;sb("/rest/v1/withdrawals",{method:"POST",prefer:"return=minimal",body:{id:"R"+Date.now().toString().slice(-7),aff_code:g("monkod",""),amount:m,status:"An atant"}}).then(()=>{AFS=null;render();toast("Demann retrè voye.")}).catch(()=>toast("Demann pa pase. Eseye ankò."))}
+let PIN="";try{PIN=sessionStorage.getItem("pin")||""}catch(e){}
+const setPin=p=>{PIN=p;try{sessionStorage.setItem("pin",p)}catch(e){}};
+function reg(){const n=$("an").value.trim(),t=$("at").value.trim(),p=$("ap").value.trim();if(!n||!t){toast("Ranpli non ak telefòn.");return}if(!/^\d{4,6}$/.test(p)){toast("PIN dwe gen 4 a 6 chif.");return}
+ sb("/rest/v1/rpc/affiliate_signup",{method:"POST",body:{p_name:n,p_phone:t,p_pin:p}}).then(c=>{st("monkod",c);setPin(p);AFS=null;render();toast("Kont kreye. Kòd ou: "+c+". Sonje PIN ou.")}).catch(()=>toast("Pa ka kreye kont lan. Eseye ankò."))}
+function login(){const c=$("ak").value.trim().toUpperCase().replace(/[^A-Z0-9]/g,""),p=$("al").value.trim();if(!c||!p){toast("Antre kòd ak PIN.");return}
+ sb("/rest/v1/rpc/affiliate_stats",{method:"POST",body:{p_code:c,p_pin:p}}).then(d=>{if(!d||d.name==null){toast("Kòd oswa PIN pa bon.");return}st("monkod",c);setPin(p);AFS=d;render()}).catch(()=>toast("Kont bloke pou kèk minit oswa pa disponib."))}
+function askRet(m){if(m<500)return;sb("/rest/v1/rpc/affiliate_withdraw",{method:"POST",body:{p_code:g("monkod",""),p_pin:PIN,p_amount:m}}).then(()=>{AFS=null;render();toast("Demann retrè voye.")}).catch(()=>toast("Demann pa pase. Eseye ankò."))}
 
 let TOK=null,ADM=null;try{TOK=sessionStorage.getItem("tok")}catch(e){}
 admin=!!TOK;
 function admLogin(){
- fetch(SB_URL+"/auth/v1/token?grant_type=password",{method:"POST",headers:{apikey:SB_KEY,"Content-Type":"application/json"},body:JSON.stringify({email:$("em").value.trim(),password:$("pw").value})}).then(r=>r.json()).then(d=>{if(!d.access_token)throw 0;TOK=d.access_token;admin=true;try{sessionStorage.setItem("tok",TOK)}catch(e){}ADM=null;startPoll();render()}).catch(()=>toast("Imèl oswa modpas pa bon."))}
+ fetch(SB_URL+"/auth/v1/token?grant_type=password",{method:"POST",headers:{apikey:SB_KEY,"Content-Type":"application/json"},body:JSON.stringify({email:$("em").value.trim(),password:$("pw").value})}).then(r=>r.json()).then(d=>{if(!d.access_token)throw 0;TOK=d.access_token;admin=true;st("owner",true);try{sessionStorage.setItem("tok",TOK)}catch(e){}ADM=null;startPoll();render()}).catch(()=>toast("Imèl oswa modpas pa bon."))}
 function admOut(){clearInterval(PT);PT=null;TOK=null;ADM=null;admin=false;try{sessionStorage.removeItem("tok")}catch(e){}go("akey")}
 function loadAdm(){
  Promise.all([sb("/rest/v1/orders?select=*&order=created_at.desc",{tok:TOK}),sb("/rest/v1/affiliates?select=*",{tok:TOK}),sb("/rest/v1/withdrawals?select=*&order=created_at.desc",{tok:TOK}),sb("/rest/v1/reviews?select=*&order=created_at.desc",{tok:TOK})]).then(([o,a,r,v])=>{ADM={orders:o||[],affs:a||[],rets:r||[],revs:v||[]};if(tab==="adm")render()}).catch(()=>{toast("Sesyon an fini. Antre ankò.");admOut()})}
@@ -285,9 +294,9 @@ function updPrev(){const b=$("pv");if(!b)return;if(!PH||!PHD){b.innerHTML=PH?"":
  b.innerHTML=`<div style="width:170px;aspect-ratio:${w}/${h};background:url(${PHD.u}) center/cover;border:6px solid #1a1a1a;border-radius:4px;box-shadow:0 8px 20px rgba(0,0,0,.25)"></div><small>Tablo ${w}x${h}: ${esc(PH.name)}. Bò foto a ka koupe yon ti kras pou l ranpli fòm nan.</small>${low?'<div class="note">Foto a ka parèt flou sou gwosè sa a. Yon foto pi gwo ap pi bon.</div>':""}`}
 async function upl(){if(!PH)return null;try{const ex=(PH.name.split(".").pop()||"jpg").replace(/[^a-z0-9]/gi,"").slice(0,5)||"jpg",p=Date.now()+"-"+Math.random().toString(36).slice(2,8)+"."+ex;const r=await fetch(SB_URL+"/storage/v1/object/photos/"+p,{method:"POST",headers:{apikey:SB_KEY,"Content-Type":PH.type},body:PH});if(!r.ok)throw 0;return SB_URL+"/storage/v1/object/public/photos/"+p}catch(e){toast("Foto a pa chaje. Voye l sou WhatsApp.");return null}}
 const STEPS=["An atant","Peye","An pwodiksyon","Pare pou livrezon","Fini"];
-function swi(){return `<div class="w pg" style="max-width:560px"><h2>Swiv kòmand ou</h2><p class="sub">Antre nimewo kòmand ou (egzanp K123456).</p><div class="card" style="gap:0"><label for="ti">Nimewo kòmand</label><input id="ti" value="${esc(TR&&TR.id||"")}" style="text-transform:uppercase"><p></p><button class="btn b" onclick="track()">Chèche</button></div>${TR?trView():""}</div>`}
+function swi(){return `<div class="w pg" style="max-width:560px"><h2>Swiv kòmand ou</h2><p class="sub">Antre nimewo kòmand ou (egzanp K123456).</p><div class="card" style="gap:0"><label for="ti">Nimewo kòmand</label><input id="ti" value="${esc(TR&&TR.id||"")}" style="text-transform:uppercase"><label for="tp">4 dènye chif telefòn ou te itilize a</label><input id="tp" inputmode="numeric" maxlength="4"><p></p><button class="btn b" onclick="track()">Chèche</button></div>${TR?trView():""}</div>`}
 function trView(){if(TR.none)return `<div class="note">Nou pa jwenn kòmand sa a. Verifye nimewo a.</div>`;if(TR.status==="Anile")return `<div class="note">Kòmand ${esc(TR.id)} anile. Kontakte nou sou WhatsApp.</div>`;const i=STEPS.indexOf(TR.status);return `<div class="card" style="margin-top:14px"><h3>${esc(TR.id)} · ${esc(TR.option||"")}</h3>${STEPS.map((s,j)=>`<div class="row"><span>${j<=i?"✅":"⬜"}</span><b style="color:${j<=i?"#000":"#888"}">${s}</b></div>`).join("")}</div>`}
-function track(){const id=$("ti").value.trim().toUpperCase();if(!id)return;sb("/rest/v1/rpc/track_order",{method:"POST",body:{p_id:id}}).then(d=>{TR=d&&d.status?{...d,id}:{none:1,id};render()}).catch(()=>toast("Pa ka chèche kounye a."))}
+function track(){const id=$("ti").value.trim().toUpperCase();if(!id)return;sb("/rest/v1/rpc/track_order",{method:"POST",body:{p_id:id,p_phone:$("tp").value}}).then(d=>{TR=d&&d.status?{...d,id}:{none:1,id};render()}).catch(()=>toast("Pa ka chèche kounye a."))}
 function loadRv(){if(RV!==null)return;RV=[];sb("/rest/v1/reviews?select=name,stars,comment&approved=eq.true&order=created_at.desc&limit=6").then(d=>{RV=d||[];if(tab==="akey")render()}).catch(()=>{})}
 function rvHtml(){loadRv();return `<section style="padding-top:0"><div class="w"><h2>Avi kliyan yo</h2>${RV&&RV.length?`<div class="grid">${RV.map(r=>`<div class="card"><b style="color:#b8860b;letter-spacing:2px">${"★".repeat(r.stars)}${"☆".repeat(5-r.stars)}</b><span>${esc(r.comment)}</span><small>${esc(r.name)}</small></div>`).join("")}</div>`:`<p class="sub">Kite premye avi a.</p>`}<div class="card" style="margin-top:14px"><h3>Kite yon avi</h3><div class="r2"><div><label for="rn">Non</label><input id="rn"></div><div><label for="rs">Nòt</label><select id="rs"><option value="5">★★★★★</option><option value="4">★★★★</option><option value="3">★★★</option><option value="2">★★</option><option value="1">★</option></select></div></div><label for="rc">Kòmantè</label><textarea id="rc" rows="2"></textarea><p></p><button class="btn s" onclick="sendRv()">Voye avi</button></div></div></section>`}
 function sendRv(){const n=$("rn").value.trim(),c=$("rc").value.trim();if(!n||!c){toast("Ranpli non ak kòmantè.");return}sb("/rest/v1/reviews",{method:"POST",prefer:"return=minimal",body:{name:n,stars:+$("rs").value,comment:c}}).then(()=>{$("rn").value="";$("rc").value="";toast("Mèsi! Avi ou ap parèt apre nou apwouve l.")}).catch(()=>toast("Avi pa voye. Eseye ankò."))}
